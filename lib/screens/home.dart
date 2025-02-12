@@ -40,7 +40,7 @@ class HomeState extends State<Home> {
         child: Stack(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height - 200,
+              height: MediaQuery.of(context).size.height - 80,
               child: Consumer<TaskProvider>(
                 builder: (context, taskProvider, child) {
                   if (taskProvider.tasks.isEmpty) {
@@ -50,15 +50,22 @@ class HomeState extends State<Home> {
                       itemCount: taskProvider.tasks.length,
                       itemBuilder: (context, index) {
                         final task = taskProvider.tasks[index];
-                        return TaskContainer(
-                          task: task,
-                          onChange: () async => await taskProvider.updateTask(
-                            task,
-                            context,
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: index == taskProvider.tasks.length - 1
+                                ? 100
+                                : 0,
                           ),
-                          onDelete: () async => await taskProvider.removeTask(
-                            task,
-                            context,
+                          child: TaskContainer(
+                            task: task,
+                            onChange: () async => await taskProvider.updateTask(
+                              task,
+                              context,
+                            ),
+                            onDelete: () async => await taskProvider.removeTask(
+                              task,
+                              context,
+                            ),
                           ),
                         );
                       },
