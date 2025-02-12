@@ -12,15 +12,20 @@ class TaskService {
 
   final taskReference = FirebaseDatabase.instance.ref().child('tasks');
 
-  Future<List<TaskModel>> getTasks() async {
-    // Fetch tasks from the server
-
-    return [];
-  }
-
-  Future<TaskModel?> getTask(int id) async {
-    // Fetch task from the server
-    return null;
+  Stream<List<TaskModel>> getTaskRealtime() {
+    return taskReference.onValue.map((event) {
+      if (event.snapshot.value == null) {
+        return <TaskModel>[];
+      }
+      final data = Map<Object?, Object?>.from(event.snapshot.value as Map);
+      final tasks = data.entries.map((entry) {
+        final task =
+            TaskModel.fromJson(Map<String, dynamic>.from(entry.value as Map));
+        task.id = entry.key as String?;
+        return task;
+      }).toList();
+      return tasks;
+    });
   }
 
   Future<bool> createTask(TaskModel task) async {
@@ -36,12 +41,23 @@ class TaskService {
   }
 
   Future<bool> updateTask(TaskModel task) async {
-    // Update task on the server
-    return true;
+    try {
+      final taskRef = taskReference.child(task.id!);
+      await taskRef.update(task.toJson());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  Future<void> deleteTask(int id) async {
-    // Delete task on the server
+  Future<bool> deleteTask(String id) async {
+    try {
+      final taskRef = taskReference.child(id);
+      await taskRef.remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
