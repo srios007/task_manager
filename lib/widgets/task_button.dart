@@ -10,8 +10,7 @@ class TaskButton extends StatelessWidget {
   final String label;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+    return SizedBox(
       height: 50,
       width: double.infinity,
       child: ElevatedButton(

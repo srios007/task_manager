@@ -56,9 +56,9 @@ class TaskContainer extends StatelessWidget {
               ),
             ],
           ),
-            InkWell(
+          InkWell(
             onTap: onDelete,
-            child: const Icon(Icons.delete_outline, color: Colors.red),
+            child: const Icon(Icons.delete_outline, color: Colors.redAccent),
           ),
         ],
       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_manager/models/task_model.dart';
 import 'package:task_manager/providers/task_provider.dart';
 import 'package:task_manager/utils/routes.dart';
-
 import '../widgets/widgets.dart';
 
 class Home extends StatefulWidget {
@@ -13,6 +13,8 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  String _filter = 'All';
+
   @override
   void initState() {
     super.initState();
@@ -22,74 +24,106 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.black,
-        surfaceTintColor: Colors.white,
-        title: const Text(
-          'My tasks',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+      appBar: _buildAppBar(context),
+      body: _buildBody(context),
+      floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      shadowColor: Colors.black,
+      surfaceTintColor: Colors.white,
+      title: const Text(
+        'My tasks',
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: DropdownButton<String>(
+            dropdownColor: Colors.white,
+            value: _filter,
+            items: <String>['All', 'Completed', 'Not Completed']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                _filter = newValue!;
+              });
+            },
           ),
         ),
-      ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 80,
-              child: Consumer<TaskProvider>(
-                builder: (context, taskProvider, child) {
-                  if (taskProvider.tasks.isEmpty) {
-                    return const Center(child: Text('No tasks available'));
-                  } else {
-                    return ListView.builder(
-                      itemCount: taskProvider.tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = taskProvider.tasks[index];
-                        return Padding(
-                          padding: EdgeInsets.only(
-                            bottom: index == taskProvider.tasks.length - 1
-                                ? 100
-                                : 0,
+      ],
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 80,
+            child: Consumer<TaskProvider>(
+              builder: (context, taskProvider, child) {
+                List<TaskModel> filteredTasks =
+                    _filterTasks(taskProvider.tasks);
+                if (filteredTasks.isEmpty) {
+                  return const Center(child: Text('No tasks available'));
+                } else {
+                  return ListView.builder(
+                    itemCount: filteredTasks.length,
+                    itemBuilder: (context, index) {
+                      final task = filteredTasks[index];
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: index == filteredTasks.length - 1 ? 80 : 0,
+                        ),
+                        child: TaskContainer(
+                          task: task,
+                          onChange: () async => await taskProvider.updateTask(
+                            task,
+                            context,
                           ),
-                          child: TaskContainer(
-                            task: task,
-                            onChange: () async => await taskProvider.updateTask(
-                              task,
-                              context,
-                            ),
-                            onDelete: () async => await taskProvider.removeTask(
-                              task,
-                              context,
-                            ),
+                          onDelete: () async => await taskProvider.removeTask(
+                            task,
+                            context,
                           ),
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
             ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                color: Colors.white,
-                child: TaskButton(
-                  label: 'Create Task',
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.newTask);
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  List<TaskModel> _filterTasks(List<TaskModel> tasks) {
+    if (_filter == 'Completed') {
+      return tasks.where((task) => task.isCompleted!).toList();
+    } else if (_filter == 'Not Completed') {
+      return tasks.where((task) => !task.isCompleted!).toList();
+    }
+    return tasks;
+  }
+
+  FloatingActionButton _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Colors.blueAccent,
+      onPressed: () => Navigator.pushNamed(context, Routes.newTask),
+      child: const Icon(Icons.add, color: Colors.white),
     );
   }
 }

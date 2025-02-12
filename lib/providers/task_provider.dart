@@ -33,7 +33,8 @@ class TaskProvider extends ChangeNotifier {
 
   /// Update a task in the realtime database
   Future<void> updateTask(TaskModel task, BuildContext context) async {
-    await taskService.updateTask(task);
+    final result = await taskService.updateTask(task);
+    showValdiationSnackBars(result, context);
 
     notifyListeners();
   }

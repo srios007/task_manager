@@ -31,6 +31,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          inputDecorationTheme: const InputDecorationTheme(
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent),
+            ),
+            labelStyle: TextStyle(color: Colors.black),
+          ),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
@@ -46,7 +52,6 @@ class MyApp extends StatelessWidget {
           Routes.home: (context) => const Home(),
           Routes.newTask: (context) => const NewTask(),
         },
-  
       ),
     );
   }
