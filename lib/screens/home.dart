@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_manager/providers/task_provider.dart';
-import 'package:task_manager/widgets/task_container.dart';
+import 'package:task_manager/utils/routes.dart';
 
-import '../models/models.dart';
+import '../widgets/widgets.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -79,39 +77,13 @@ class HomeState extends State<Home> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 80,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 color: Colors.white,
-                child: SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () async {
-                      try {
-                        final newTask = TaskModel(
-                          name: 'New Task',
-                          description:
-                              'New Description asd as dasd abghsdgashj dkjhasg djkhasghjdk askjh djkahsgd kjhasg d khjasg kdjga skhjdask d',
-                          isCompleted: false,
-                        );
-                        await Provider.of<TaskProvider>(context, listen: false)
-                            .addTask(newTask, context);
-                      } catch (e) {
-                        log('Error: $e');
-                      }
-                    },
-                    child: const Text(
-                      'Add Task',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
+                child: TaskButton(
+                  label: 'Create Task',
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.newTask);
+                  },
                 ),
               ),
             ),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'screens/home.dart';
+import 'screens/screens.dart';
 // ignore: unused_import
 import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'providers/providers.dart';
+import 'utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,12 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: const Home(),
+        initialRoute: '/',
+        routes: {
+          Routes.home: (context) => const Home(),
+          Routes.newTask: (context) => const NewTask(),
+        },
+  
       ),
     );
   }
