@@ -33,6 +33,9 @@ class NewTaskState extends State<NewTask> {
   void _createTask() {
     Provider.of<TaskProvider>(context, listen: false).addTask(
       TaskModel(
+        isPendingToCreate: false,
+        isPendingToUpdate: false,
+        createdAt: DateTime.now(),
         name: _titleController.text,
         description: _descriptionController.text,
         isCompleted: false,

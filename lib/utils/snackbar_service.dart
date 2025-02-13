@@ -21,10 +21,10 @@ class SnackbarService {
     });
   }
 
-  void showErrorSnackbar(BuildContext context) {
+  void showErrorSnackbar(BuildContext context, {String? message}) {
     _removeCurrentOverlay();
     _overlayEntry = _createOverlayEntry(
-        context, 'An error occurred, please try again', Colors.red);
+        context, message ?? 'An error occurred, please try again', Colors.red);
     Overlay.of(context).insert(_overlayEntry!);
     Future.delayed(const Duration(seconds: 3), () {
       _removeCurrentOverlay();

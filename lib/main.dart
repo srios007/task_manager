@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/screens.dart';
 // ignore: unused_import
-import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -15,7 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
