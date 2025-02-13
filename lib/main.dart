@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        initialRoute: '/',
+        initialRoute: Routes.home,
         routes: {
           Routes.home: (context) => const Home(),
           Routes.newTask: (context) => const NewTask(),
