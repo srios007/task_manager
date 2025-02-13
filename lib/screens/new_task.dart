@@ -30,6 +30,7 @@ class NewTaskState extends State<NewTask> {
     }
   }
 
+  /// Create a task in the realtime database
   void _createTask() {
     Provider.of<TaskProvider>(context, listen: false).addTask(
       TaskModel(
